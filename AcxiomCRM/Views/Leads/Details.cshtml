@@ -1,0 +1,77 @@
+@model AcxiomCRM.Models.Lead
+@{
+    ViewData["Title"] = "Lead Profile";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="fw-bold mb-0">@Model.LeadName <span class="badge bg-secondary fs-6">@Model.LeadCode</span></h3>
+        <p class="text-muted small mb-0">Lead profile and interaction timeline</p>
+    </div>
+    <div>
+        @if (Model.Status != "Converted")
+        {
+            <a asp-action="Convert" asp-route-id="@Model.LeadId" class="btn btn-success btn-sm me-1">
+                <i class="fa-solid fa-arrows-spin me-1"></i>Convert Lead
+            </a>
+        }
+        <a asp-action="Edit" asp-route-id="@Model.LeadId" class="btn btn-outline-primary btn-sm me-1">
+            <i class="fa-solid fa-pen me-1"></i>Edit
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Prospect Details</h6>
+            <div class="mb-2"><span class="text-muted small d-block">Company:</span><strong>@(Model.CompanyName ?? "N/A")</strong></div>
+            <div class="mb-2"><span class="text-muted small d-block">Email:</span><a href="mailto:@Model.Email">@Model.Email</a></div>
+            <div class="mb-2"><span class="text-muted small d-block">Phone:</span>@Model.Phone</div>
+            <div class="mb-2"><span class="text-muted small d-block">Source:</span><span class="badge bg-light text-dark border">@Model.Source</span></div>
+            <div class="mb-2"><span class="text-muted small d-block">Priority:</span><span class="badge bg-warning text-dark">@Model.Priority</span></div>
+            <div class="mb-2"><span class="text-muted small d-block">Status:</span><span class="badge bg-primary">@Model.Status</span></div>
+            <div class="mb-2"><span class="text-muted small d-block">Expected Value:</span><strong class="text-success">$@Model.ExpectedValue.ToString("N0")</strong></div>
+            <div class="mb-2"><span class="text-muted small d-block">Captured Date:</span>@Model.CreatedDate.ToString("yyyy-MM-dd HH:mm")</div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card p-3 mb-3">
+            <h6 class="fw-bold mb-2">Discovery & Requirement Notes</h6>
+            <p class="text-dark bg-light p-3 rounded small mb-0">@(string.IsNullOrWhiteSpace(Model.Notes) ? "No notes recorded yet." : Model.Notes)</p>
+        </div>
+
+        <!-- Follow-Ups -->
+        <div class="card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold mb-0"><i class="fa-solid fa-calendar-check me-2 text-warning"></i>Follow-Up Schedule</h6>
+                <a asp-controller="FollowUps" asp-action="Create" asp-route-leadId="@Model.LeadId" class="btn btn-sm btn-outline-warning py-0">Schedule</a>
+            </div>
+            @if (Model.FollowUps.Any())
+            {
+                <ul class="list-group list-group-flush small">
+                    @foreach (var fu in Model.FollowUps)
+                    {
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="text-dark">@fu.Subject</strong>
+                                <span class="badge bg-light text-dark border ms-2">@fu.FollowUpType</span>
+                                <div class="text-muted small">@fu.FollowUpDate.ToString("g") &bull; @fu.Remarks</div>
+                            </div>
+                            <span class="badge @(fu.Status == "Completed" ? "bg-success" : "bg-warning text-dark")">@fu.Status</span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted small mb-0">No follow-ups recorded.</p>
+            }
+        </div>
+    </div>
+</div>

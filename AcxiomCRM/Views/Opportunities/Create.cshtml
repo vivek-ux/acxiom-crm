@@ -1,0 +1,110 @@
+@model AcxiomCRM.Models.Opportunity
+@{
+    ViewData["Title"] = "Create Opportunity";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold mb-0">Create Sales Opportunity</h4>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa-solid fa-arrow-left me-1"></i>Back to Deals
+                </a>
+            </div>
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small"></div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="OpportunityName" class="form-label small fw-semibold">Opportunity / Deal Name *</label>
+                        <input asp-for="OpportunityName" class="form-control" placeholder="e.g. Enterprise Cloud ERP Migration" required />
+                        <span asp-validation-for="OpportunityName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="CustomerId" class="form-label small fw-semibold">Select Customer</label>
+                        <select asp-for="CustomerId" asp-items="ViewBag.Customers" class="form-select">
+                            <option value="">-- Associate Customer --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="LeadId" class="form-label small fw-semibold">Or Select Lead Source</label>
+                        <select asp-for="LeadId" asp-items="ViewBag.Leads" class="form-select">
+                            <option value="">-- Associate Lead --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Amount" class="form-label small fw-semibold">Deal Amount ($) * (Must be > 0)</label>
+                        <input asp-for="Amount" id="txtAmount" type="number" step="100" min="0.01" class="form-control" placeholder="50000" required oninput="calcWeighted()" />
+                        <span asp-validation-for="Amount" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Probability" class="form-label small fw-semibold">Win Probability (0-100%) *</label>
+                        <input asp-for="Probability" id="txtProb" type="number" min="0" max="100" class="form-control" placeholder="50" required oninput="calcWeighted()" />
+                        <span asp-validation-for="Probability" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold">Weighted Value ($)</label>
+                        <input type="text" id="lblWeighted" class="form-control bg-light" readonly value="$0" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Stage" class="form-label small fw-semibold">Pipeline Stage</label>
+                        <select asp-for="Stage" class="form-select">
+                            <option value="Qualification">Qualification (10-25%)</option>
+                            <option value="Proposal">Proposal / Quote (50%)</option>
+                            <option value="Negotiation">Negotiation / Review (80%)</option>
+                            <option value="Won">Closed Won (100%)</option>
+                            <option value="Lost">Closed Lost (0%)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ExpectedCloseDate" class="form-label small fw-semibold">Expected Close Date * (Cannot be past)</label>
+                        <input asp-for="ExpectedCloseDate" type="date" class="form-control" required />
+                        <span asp-validation-for="ExpectedCloseDate" class="text-danger small"></span>
+                    </div>
+
+                    @if (!User.IsInRole("SalesExecutive"))
+                    {
+                        <div class="col-md-6">
+                            <label asp-for="AssignedTo" class="form-label small fw-semibold">Deal Owner</label>
+                            <select asp-for="AssignedTo" asp-items="ViewBag.SalesUsers" class="form-select">
+                                <option value="">-- Assign Sales Executive --</option>
+                            </select>
+                        </div>
+                    }
+
+                    <div class="col-12">
+                        <label asp-for="Notes" class="form-label small fw-semibold">Commercial Notes</label>
+                        <textarea asp-for="Notes" class="form-control" rows="2" placeholder="Key decision makers, competition, pricing notes..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fa-solid fa-save me-1"></i>Save Opportunity
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calcWeighted() {
+        const amt = parseFloat(document.getElementById('txtAmount').value) || 0;
+        const prob = parseFloat(document.getElementById('txtProb').value) || 0;
+        const weighted = (amt * prob) / 100;
+        document.getElementById('lblWeighted').value = '$' + weighted.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
+    }
+    calcWeighted();
+</script>

@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Lead Conversion Report";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="fw-bold mb-0">Lead Conversion & Velocity Report</h3>
+        <p class="text-muted small mb-0">Analysis of lead qualification efficiency and conversion ratios</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <span class="text-muted small">Total Captured Leads</span>
+            <h3 class="fw-bold text-dark mb-0 mt-1">@ViewBag.TotalLeads</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <span class="text-muted small">Converted to Customers</span>
+            <h3 class="fw-bold text-success mb-0 mt-1">@ViewBag.ConvertedLeads</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <span class="text-muted small">Lost / Disqualified</span>
+            <h3 class="fw-bold text-danger mb-0 mt-1">@ViewBag.LostLeads</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <span class="text-muted small">Overall Conversion Rate</span>
+            <h3 class="fw-bold text-primary mb-0 mt-1">@(((double)ViewBag.ConversionRate).ToString("F1"))%</h3>
+        </div>
+    </div>
+</div>

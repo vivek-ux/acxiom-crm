@@ -1,0 +1,62 @@
+@model AcxiomCRM.Models.ViewModels.CreateUserViewModel
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold mb-0">Create Application User</h4>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa-solid fa-arrow-left me-1"></i>Back
+                </a>
+            </div>
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small"></div>
+
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label small fw-semibold">Full Name *</label>
+                    <input asp-for="FullName" class="form-control" placeholder="e.g. Alex Henderson" required />
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label small fw-semibold">Corporate Email *</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="alex@acxiom.com" required />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Role" class="form-label small fw-semibold">Assigned Role *</label>
+                    <select asp-for="Role" class="form-select">
+                        <option value="SalesExecutive">Sales Executive (Scoped to assigned deals)</option>
+                        <option value="Manager">Sales Manager (Team visibility & reports)</option>
+                        <option value="Admin">Administrator (Full security & system control)</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label small fw-semibold">Initial Password * (min 8 chars, 1 uppercase, 1 digit)</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" required />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label small fw-semibold">Confirm Password *</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="••••••••" required />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fa-solid fa-user-plus me-1"></i>Create User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

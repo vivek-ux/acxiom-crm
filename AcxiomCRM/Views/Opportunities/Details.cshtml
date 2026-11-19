@@ -1,0 +1,42 @@
+@model AcxiomCRM.Models.Opportunity
+@{
+    ViewData["Title"] = "Deal Details";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="fw-bold mb-0">@Model.OpportunityName</h3>
+        <p class="text-muted small mb-0">Commercial opportunity details and probability weighting</p>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.OpportunityId" class="btn btn-outline-primary btn-sm me-1">
+            <i class="fa-solid fa-pen me-1"></i>Edit
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-5">
+        <div class="card p-3 mb-3">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Commercial Metrics</h6>
+            <div class="mb-2"><span class="text-muted small d-block">Deal Value:</span><h4 class="fw-bold text-success mb-0">$@Model.Amount.ToString("N0")</h4></div>
+            <div class="mb-2"><span class="text-muted small d-block">Win Probability:</span><strong>@Model.Probability%</strong></div>
+            <div class="mb-2"><span class="text-muted small d-block">Weighted Pipeline Value (Amount &times; Prob / 100):</span><strong class="text-dark fs-5">$@Model.WeightedAmount.ToString("N0")</strong></div>
+            <div class="mb-2"><span class="text-muted small d-block">Current Stage:</span><span class="badge bg-primary fs-6">@Model.Stage</span></div>
+            <div class="mb-2"><span class="text-muted small d-block">Expected Close:</span><strong>@Model.ExpectedCloseDate.ToString("yyyy-MM-dd")</strong></div>
+            <div class="mb-2"><span class="text-muted small d-block">Customer / Account:</span>@(Model.Customer?.CustomerName ?? "Prospective Account")</div>
+            <div class="mb-2"><span class="text-muted small d-block">Created On:</span>@Model.CreatedDate.ToString("yyyy-MM-dd HH:mm")</div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card p-3 mb-3">
+            <h6 class="fw-bold mb-2">Deal Strategy & Notes</h6>
+            <p class="text-dark bg-light p-3 rounded small mb-0">@(string.IsNullOrWhiteSpace(Model.Notes) ? "No notes recorded." : Model.Notes)</p>
+        </div>
+    </div>
+</div>

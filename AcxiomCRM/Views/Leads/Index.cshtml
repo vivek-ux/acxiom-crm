@@ -1,0 +1,140 @@
+@model IEnumerable<AcxiomCRM.Models.Lead>
+@{
+    ViewData["Title"] = "Lead Management";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="fw-bold mb-0">Lead Capture & Qualification</h3>
+        <p class="text-muted small mb-0">Capture prospective accounts, track qualification stages, and convert to customers</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-plus me-1"></i>New Lead
+    </a>
+</div>
+
+<!-- Search & Filter Card (Section 17.13) -->
+<div class="card p-3 mb-3">
+    <form method="get" asp-action="Index" class="row g-2 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
+                <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search by lead name, company, email..." />
+            </div>
+        </div>
+        <div class="col-md-2">
+            <select name="status" class="form-select form-select-sm">
+                <option value="">All Statuses</option>
+                <option value="New" selected="@(ViewBag.Status == "New")">New</option>
+                <option value="Contacted" selected="@(ViewBag.Status == "Contacted")">Contacted</option>
+                <option value="Qualified" selected="@(ViewBag.Status == "Qualified")">Qualified</option>
+                <option value="Converted" selected="@(ViewBag.Status == "Converted")">Converted</option>
+                <option value="Lost" selected="@(ViewBag.Status == "Lost")">Lost</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="priority" class="form-select form-select-sm">
+                <option value="">All Priorities</option>
+                <option value="High" selected="@(ViewBag.Priority == "High")">High</option>
+                <option value="Medium" selected="@(ViewBag.Priority == "Medium")">Medium</option>
+                <option value="Low" selected="@(ViewBag.Priority == "Low")">Low</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-dark btn-sm flex-grow-1">Filter</button>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Reset</a>
+        </div>
+    </form>
+</div>
+
+<!-- Leads Table -->
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small">
+                <tr>
+                    <th>Code</th>
+                    <th>Lead / Prospect</th>
+                    <th>Source</th>
+                    <th>Expected Value</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="small">
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold text-info">@item.LeadCode</td>
+                            <td>
+                                <div class="fw-semibold">@item.LeadName</div>
+                                <div class="text-muted small">@(item.CompanyName ?? "Individual") &bull; @item.Email</div>
+                            </td>
+                            <td><span class="badge bg-light text-dark border">@item.Source</span></td>
+                            <td class="fw-bold text-dark">$@item.ExpectedValue.ToString("N0")</td>
+                            <td>
+                                @if (item.Priority == "High")
+                                {
+                                    <span class="badge bg-danger">High</span>
+                                }
+                                else if (item.Priority == "Medium")
+                                {
+                                    <span class="badge bg-warning text-dark">Medium</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Low</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Status == "Qualified")
+                                {
+                                    <span class="badge bg-success">Qualified</span>
+                                }
+                                else if (item.Status == "Converted")
+                                {
+                                    <span class="badge bg-primary">Converted</span>
+                                }
+                                else if (item.Status == "Lost")
+                                {
+                                    <span class="badge bg-danger">Lost</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">@item.Status</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                @if (item.Status != "Converted")
+                                {
+                                    <a asp-action="Convert" asp-route-id="@item.LeadId" class="btn btn-success btn-sm py-0 px-2 fw-semibold" title="Convert to Customer & Deal">
+                                        <i class="fa-solid fa-arrows-spin me-1"></i>Convert
+                                    </a>
+                                }
+                                <a asp-action="Details" asp-route-id="@item.LeadId" class="btn btn-outline-info btn-sm py-0 px-2" title="Details">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.LeadId" class="btn btn-outline-primary btn-sm py-0 px-2" title="Edit">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">
+                            <i class="fa-solid fa-inbox fa-2x mb-2 d-block text-secondary"></i>
+                            No lead records found.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

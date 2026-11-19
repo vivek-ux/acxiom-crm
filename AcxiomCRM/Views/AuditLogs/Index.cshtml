@@ -1,0 +1,119 @@
+@model IEnumerable<AcxiomCRM.Models.AuditLog>
+@{
+    ViewData["Title"] = "System Audit Trail";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="fw-bold mb-0">System Audit Trail & Security Ledger</h3>
+        <p class="text-muted small mb-0">Immutable append-oriented audit records tracking all business and authentication events</p>
+    </div>
+</div>
+
+<!-- Filter Card -->
+<div class="card p-3 mb-3">
+    <form method="get" asp-action="Index" class="row g-2 align-items-center">
+        <div class="col-md-4">
+            <input type="text" name="userSearch" value="@ViewBag.UserSearch" class="form-control form-control-sm" placeholder="Filter by user email..." />
+        </div>
+        <div class="col-md-3">
+            <select name="module" class="form-select form-select-sm">
+                <option value="">All Entities / Modules</option>
+                <option value="Auth" selected="@(ViewBag.Module == "Auth")">Authentication</option>
+                <option value="Customer" selected="@(ViewBag.Module == "Customer")">Customer</option>
+                <option value="Lead" selected="@(ViewBag.Module == "Lead")">Lead</option>
+                <option value="Opportunity" selected="@(ViewBag.Module == "Opportunity")">Opportunity</option>
+                <option value="FollowUp" selected="@(ViewBag.Module == "FollowUp")">FollowUp</option>
+                <option value="User" selected="@(ViewBag.Module == "User")">User Administration</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="action" class="form-select form-select-sm">
+                <option value="">All Operations</option>
+                <option value="Login" selected="@(ViewBag.Action == "Login")">Login</option>
+                <option value="FailedLogin" selected="@(ViewBag.Action == "FailedLogin")">Failed Login</option>
+                <option value="Create" selected="@(ViewBag.Action == "Create")">Create</option>
+                <option value="Update" selected="@(ViewBag.Action == "Update")">Update</option>
+                <option value="Delete" selected="@(ViewBag.Action == "Delete")">Delete / Deactivate</option>
+                <option value="Convert" selected="@(ViewBag.Action == "Convert")">Convert</option>
+                <option value="Security" selected="@(ViewBag.Action == "Security")">Security</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-dark btn-sm flex-grow-1">Filter</button>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Reset</a>
+        </div>
+    </form>
+</div>
+
+<!-- Table -->
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 font-monospace" style="font-size: 0.8rem;">
+            <thead class="table-dark">
+                <tr>
+                    <th>Timestamp (UTC)</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Entity</th>
+                    <th>Record ID</th>
+                    <th>Audit Details</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var log in Model)
+                    {
+                        <tr>
+                            <td>@log.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td class="fw-bold">@log.UserId</td>
+                            <td>
+                                @if (log.Action == "Create")
+                                {
+                                    <span class="badge bg-success">CREATE</span>
+                                }
+                                else if (log.Action == "Update")
+                                {
+                                    <span class="badge bg-primary">UPDATE</span>
+                                }
+                                else if (log.Action == "Delete")
+                                {
+                                    <span class="badge bg-danger">DELETE</span>
+                                }
+                                else if (log.Action == "Login")
+                                {
+                                    <span class="badge bg-info text-dark">LOGIN</span>
+                                }
+                                else if (log.Action == "FailedLogin")
+                                {
+                                    <span class="badge bg-warning text-dark">AUTH_FAIL</span>
+                                }
+                                else if (log.Action == "Convert")
+                                {
+                                    <span class="badge bg-success">CONVERT</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@log.Action.ToUpper()</span>
+                                }
+                            </td>
+                            <td>@log.EntityName</td>
+                            <td>@(log.RecordId ?? "—")</td>
+                            <td>@(log.Details ?? log.NewValue ?? "—")</td>
+                            <td>@(log.IpAddress ?? "127.0.0.1")</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">No audit logs matching query.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

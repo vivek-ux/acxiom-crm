@@ -1,0 +1,46 @@
+@model AcxiomCRM.Models.ViewModels.CreateUserViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="card shadow p-4">
+            <h3 class="fw-bold mb-3 text-center">Create an Account</h3>
+            <form asp-action="Register" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small"></div>
+
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label small fw-semibold">Full Name</label>
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label small fw-semibold">Email Address</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label small fw-semibold">Password (min 8 chars, 1 uppercase, 1 digit)</label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label small fw-semibold">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2">Register</button>
+            </form>
+            <div class="text-center mt-3">
+                <a asp-action="Login" class="small text-decoration-none">Already have an account? Sign in</a>
+            </div>
+        </div>
+    </div>
+</div>

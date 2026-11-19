@@ -1,0 +1,91 @@
+@model AcxiomCRM.Models.Customer
+@{
+    ViewData["Title"] = "Edit Customer";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold mb-0">Edit Customer: @Model.CustomerCode</h4>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa-solid fa-arrow-left me-1"></i>Back to List
+                </a>
+            </div>
+
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="CustomerId" />
+                <input type="hidden" asp-for="CustomerCode" />
+                <input type="hidden" asp-for="CreatedDate" />
+                <input type="hidden" asp-for="CreatedBy" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="CustomerName" class="form-label small fw-semibold">Customer / Account Name *</label>
+                        <input asp-for="CustomerName" class="form-control" required />
+                        <span asp-validation-for="CustomerName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="CompanyName" class="form-label small fw-semibold">Company / Parent Entity</label>
+                        <input asp-for="CompanyName" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label small fw-semibold">Email Address *</label>
+                        <input asp-for="Email" type="email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label small fw-semibold">10-Digit Mobile Phone *</label>
+                        <input asp-for="Phone" class="form-control" pattern="[0-9]{10}" maxlength="10" required />
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Address" class="form-label small fw-semibold">Business Address</label>
+                        <input asp-for="Address" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="City" class="form-label small fw-semibold">City</label>
+                        <input asp-for="City" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="State" class="form-label small fw-semibold">State</label>
+                        <input asp-for="State" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Status" class="form-label small fw-semibold">Status</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    @if (!User.IsInRole("SalesExecutive"))
+                    {
+                        <div class="col-md-6">
+                            <label asp-for="OwnerId" class="form-label small fw-semibold">Assigned Sales Executive</label>
+                            <select asp-for="OwnerId" asp-items="ViewBag.SalesUsers" class="form-select">
+                                <option value="">-- Select Sales Executive --</option>
+                            </select>
+                        </div>
+                    }
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fa-solid fa-save me-1"></i>Update Customer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

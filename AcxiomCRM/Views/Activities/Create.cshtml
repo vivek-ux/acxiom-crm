@@ -1,0 +1,71 @@
+@model AcxiomCRM.Models.Activity
+@{
+    ViewData["Title"] = "Log Activity";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card p-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold mb-0">Log Sales Activity</h4>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa-solid fa-arrow-left me-1"></i>Back
+                </a>
+            </div>
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="CustomerId" class="form-label small fw-semibold">Customer</label>
+                        <select asp-for="CustomerId" asp-items="ViewBag.Customers" class="form-select">
+                            <option value="">-- Associate Customer --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="LeadId" class="form-label small fw-semibold">Lead</label>
+                        <select asp-for="LeadId" asp-items="ViewBag.Leads" class="form-select">
+                            <option value="">-- Associate Lead --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ActivityType" class="form-label small fw-semibold">Activity Type</label>
+                        <select asp-for="ActivityType" class="form-select">
+                            <option value="Call">Phone Call</option>
+                            <option value="Meeting">Client Meeting</option>
+                            <option value="Email">Email Communication</option>
+                            <option value="Task">Internal Task</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ActivityDate" class="form-label small fw-semibold">Date & Time</label>
+                        <input asp-for="ActivityDate" type="datetime-local" class="form-control" />
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Subject" class="form-label small fw-semibold">Subject *</label>
+                        <input asp-for="Subject" class="form-control" placeholder="e.g. Completed initial architecture review call" required />
+                        <span asp-validation-for="Subject" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label small fw-semibold">Detailed Outcome</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Key outcomes, client reaction, next steps..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fa-solid fa-save me-1"></i>Save Activity
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
