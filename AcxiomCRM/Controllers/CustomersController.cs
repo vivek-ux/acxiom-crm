@@ -90,6 +90,7 @@ public class CustomersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Customer customer)
     {
+        ModelState.Remove("CustomerCode");
         // 1. Business Validation: Unique Email & Phone (Section 17.5 & 17.7)
         if (await _context.Customers.AnyAsync(c => c.Email.ToLower() == customer.Email.ToLower()))
         {

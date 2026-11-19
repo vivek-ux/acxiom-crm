@@ -8,9 +8,8 @@ public class Lead
     [Key]
     public int LeadId { get; set; }
 
-    [Required]
     [StringLength(50)]
-    public string LeadCode { get; set; } = string.Empty;
+    public string? LeadCode { get; set; }
 
     [Required(ErrorMessage = "Lead Name is required.")]
     [StringLength(100, ErrorMessage = "Lead Name cannot exceed 100 characters.")]

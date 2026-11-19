@@ -8,9 +8,8 @@ public class Customer
     [Key]
     public int CustomerId { get; set; }
 
-    [Required]
     [StringLength(50)]
-    public string CustomerCode { get; set; } = string.Empty;
+    public string? CustomerCode { get; set; }
 
     [Required(ErrorMessage = "Customer Name is required.")]
     [StringLength(100, ErrorMessage = "Customer Name cannot exceed 100 characters.")]

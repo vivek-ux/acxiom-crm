@@ -96,6 +96,7 @@ public class LeadsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Lead lead)
     {
+        ModelState.Remove("LeadCode");
         if (ModelState.IsValid)
         {
             var user = await _userManager.GetUserAsync(User);
