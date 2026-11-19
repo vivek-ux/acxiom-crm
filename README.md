@@ -101,3 +101,8 @@ All endpoints return strongly typed DTOs with standardized HTTP status codes (`2
 * `GET /api/followups` — List scheduled follow-ups
 * `POST /api/followups` — Schedule follow-up with past-date prevention
 * `GET /api/reports/pipeline` — Stage-wise count, total amount, and probability-weighted pipeline
+
+---
+
+## 🌐 Live Cloud Demo URL
+👉 **https://gig-paste-pacific-scene.trycloudflare.com**
